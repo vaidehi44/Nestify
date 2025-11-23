@@ -1,6 +1,7 @@
 package com.nestify.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -22,8 +23,10 @@ public class Hotel {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "Name is mandatory")
     private String name;
 
+    @NotBlank(message = "City is mandatory")
     @Column(nullable = false)
     private String city;
 
@@ -37,12 +40,12 @@ public class Hotel {
     private HotelContactInfo contactInfo;
 
     @Column(nullable = false)
-    private boolean isActive;
+    private Boolean isActive;
 
     @ManyToOne
     private User owner;
 
-    @OneToMany(mappedBy = "hotel")
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Room> rooms;
 
     @CreationTimestamp

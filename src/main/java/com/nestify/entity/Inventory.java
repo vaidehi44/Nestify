@@ -6,8 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -15,8 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "room")
-public class Room {
+public class Inventory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,30 +25,35 @@ public class Room {
     @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name= "room_id", nullable = false)
+    private Room room;
+
     @Column(nullable = false)
-    private String type;
+    private LocalDate date;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal basePrice;
-
-    @Column(columnDefinition = "TEXT[]")
-    private String[] photos;
-
-    @Column(columnDefinition = "TEXT[]")
-    private String[] amenities;
+    @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")
+    private Integer bookedCount;
 
     @Column(nullable = false)
     private Integer totalCount;
 
-    @Column(nullable = false)
-    private Integer capacity;
+    @Column(nullable = false, precision = 5, scale = 2)
+    private BigDecimal surgeFactor;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    List<Inventory> inventories;
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal price; // basePrice * surgeFactor
+
+    @Column(nullable = false)
+    private String city;
+
+    @Column(nullable = false)
+    private Boolean closed;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
 }
