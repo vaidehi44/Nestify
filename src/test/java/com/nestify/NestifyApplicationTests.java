@@ -39,7 +39,7 @@ class NestifyApplicationTests {
         hotel.setName("Hotel 3");
         hotel.setCity("Pune");
         hotel.setPhotos(photos);
-        hotel.setActive(true);
+        hotel.setIsActive(true);
 
         hotelRepository.save(hotel);
     }
