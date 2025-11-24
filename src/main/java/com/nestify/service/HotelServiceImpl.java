@@ -1,6 +1,8 @@
 package com.nestify.service;
 
 import com.nestify.dto.HotelDto;
+import com.nestify.dto.HotelInfoDto;
+import com.nestify.dto.RoomDto;
 import com.nestify.entity.Hotel;
 import com.nestify.entity.Room;
 import com.nestify.exception.ResourceNotFoundException;
@@ -10,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -84,5 +89,21 @@ public class HotelServiceImpl implements HotelService {
         for (Room room: hotel.getRooms()) {
             inventoryService.initializeInventoryForAYear(room);
         }
+    }
+
+    @Override
+    public HotelInfoDto getHotelInfoById(long hotelId) {
+        Hotel hotel = hotelRepository
+                .findById(hotelId)
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with ID: " + hotelId));
+        List<RoomDto> rooms = hotel.getRooms()
+                .stream()
+                .map((room) -> modelmapper.map(room, RoomDto.class))
+                .collect(Collectors.toList());
+
+        return HotelInfoDto.builder()
+                .hotelDto(modelmapper.map(hotel, HotelDto.class))
+                .rooms(rooms)
+                .build();
     }
 }

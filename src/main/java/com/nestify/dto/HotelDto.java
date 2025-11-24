@@ -12,6 +12,4 @@ public class HotelDto {
     private String[] photos;
     private String[] amenities;
     private HotelContactInfo contactInfo;
-    //private Boolean isActive;
-    private List<Room> rooms;
 }
