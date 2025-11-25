@@ -2,10 +2,7 @@ package com.nestify.entity;
 
 import com.nestify.entity.enums.Role;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,6 +10,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Data
 @Builder
 @Table(name = "app_user")
 public class User {

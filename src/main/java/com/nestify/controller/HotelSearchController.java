@@ -32,5 +32,4 @@ public class HotelSearchController {
         return ResponseEntity.ok(hotelInfoDto);
     }
 
-
 }
