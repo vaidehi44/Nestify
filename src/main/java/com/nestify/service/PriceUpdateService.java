@@ -21,9 +21,8 @@ public class PriceUpdateService {
     private final PricingService pricingService;
     private final InventoryRepository inventoryRepository;
 
-    //@Scheduled(fixedRate = 6000)
-    //@Scheduled(cron = "0 0 * * * *")
-    @Scheduled(cron = "*/20 * * * * ?")
+    //@Scheduled(cron = "*/20 * * * * ?")
+    @Scheduled(cron = "0 0 * * * *")
     public void updateInventoryPrices() {
         log.info("Updating Inventory prices as per pricing strategy");
 
