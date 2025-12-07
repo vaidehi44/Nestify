@@ -48,15 +48,12 @@ public class Booking {
     @Column(nullable = false)
     private BookingStatus bookingStatus;
 
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "booking_guest",
-//            joinColumns = @JoinColumn(name = "booking_id"),
-//            inverseJoinColumns = @JoinColumn(name = "guest_id")
-//    )
-//    private Set<Guest> guests;
-
-    @OneToMany(mappedBy = "booking", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "booking_guest",
+            joinColumns = @JoinColumn(name = "booking_id"),
+            inverseJoinColumns = @JoinColumn(name = "guest_id")
+    )
     private Set<Guest> guests;
 
     @Column(nullable = false, precision = 10, scale = 2)

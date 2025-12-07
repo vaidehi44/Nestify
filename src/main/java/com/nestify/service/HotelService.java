@@ -3,6 +3,9 @@ package com.nestify.service;
 import com.nestify.dto.HotelDto;
 import com.nestify.dto.HotelInfoDto;
 import com.nestify.entity.Hotel;
+import org.jspecify.annotations.Nullable;
+
+import java.util.List;
 
 public interface HotelService {
 
@@ -17,4 +20,6 @@ public interface HotelService {
     void activateHotel(Long hotelId);
 
     HotelInfoDto getHotelInfoById(long hotelId);
+
+    List<HotelDto> getAllHotelsByOwner();
 }

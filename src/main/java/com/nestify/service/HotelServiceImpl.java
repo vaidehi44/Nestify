@@ -5,6 +5,7 @@ import com.nestify.dto.HotelInfoDto;
 import com.nestify.dto.RoomDto;
 import com.nestify.entity.Hotel;
 import com.nestify.entity.Room;
+import com.nestify.entity.User;
 import com.nestify.exception.ResourceNotFoundException;
 import com.nestify.repository.HotelRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.nestify.utils.AppUtils.getCurrentUser;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -24,16 +27,16 @@ public class HotelServiceImpl implements HotelService {
     private final HotelRepository hotelRepository;
     private final InventoryService inventoryService;
     private final RoomService roomService;
-    private final ModelMapper modelmapper;
+    private final ModelMapper modelMapper;
 
     @Override
     public HotelDto createNewHotel(HotelDto hotelDto) {
         log.info("Creating new hotel: {}", hotelDto.getName());
-        Hotel hotel = modelmapper.map(hotelDto, Hotel.class);
+        Hotel hotel = modelMapper.map(hotelDto, Hotel.class);
         hotel.setIsActive(false);
         hotel = hotelRepository.save(hotel);
         log.info("Hotel created with id: {}", hotel.getId());
-        return modelmapper.map(hotel, HotelDto.class);
+        return modelMapper.map(hotel, HotelDto.class);
     }
 
     @Override
@@ -43,7 +46,7 @@ public class HotelServiceImpl implements HotelService {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with id: " + id));
         log.info("Hotel found");
-        return modelmapper.map(hotel, HotelDto.class);
+        return modelMapper.map(hotel, HotelDto.class);
     }
 
     @Override
@@ -52,10 +55,10 @@ public class HotelServiceImpl implements HotelService {
         Hotel hotel = hotelRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with id: " + id));
-        modelmapper.map(hotelDto, hotel);
+        modelMapper.map(hotelDto, hotel);
         hotelRepository.save(hotel);
         log.info("Hotel updated with id: {}", id);
-        return modelmapper.map(hotel, HotelDto.class);
+        return modelMapper.map(hotel, HotelDto.class);
     }
 
     @Override
@@ -98,12 +101,24 @@ public class HotelServiceImpl implements HotelService {
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with ID: " + hotelId));
         List<RoomDto> rooms = hotel.getRooms()
                 .stream()
-                .map((room) -> modelmapper.map(room, RoomDto.class))
+                .map((room) -> modelMapper.map(room, RoomDto.class))
                 .collect(Collectors.toList());
 
         return HotelInfoDto.builder()
-                .hotelDto(modelmapper.map(hotel, HotelDto.class))
+                .hotelDto(modelMapper.map(hotel, HotelDto.class))
                 .rooms(rooms)
                 .build();
+    }
+
+    @Override
+    public List<HotelDto> getAllHotelsByOwner() {
+        User user = getCurrentUser();
+        log.info("Getting all hotels for the admin user with ID: {}", user.getId());
+        List<Hotel> hotels = hotelRepository.findByOwner(user);
+
+        return hotels
+                .stream()
+                .map((element) -> modelMapper.map(element, HotelDto.class))
+                .collect(Collectors.toList());
     }
 }

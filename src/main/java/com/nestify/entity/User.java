@@ -1,5 +1,6 @@
 package com.nestify.entity;
 
+import com.nestify.entity.enums.Gender;
 import com.nestify.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,6 +35,11 @@ public class User implements UserDetails {
     private String firstName;
 
     private String lastName;
+
+    private LocalDate dateOfBirth;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
